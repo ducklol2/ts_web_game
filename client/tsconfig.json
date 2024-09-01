@@ -5,7 +5,9 @@
       "removeComments": false,
       "sourceMap": true,
       "target": "es6",
-      "outDir": "dist"
+      "outDir": "dist",
+      "moduleResolution": "NodeNext",
+      "module": "NodeNext"
     },
     "include": [
       "*.ts"
