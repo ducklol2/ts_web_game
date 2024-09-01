@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "tsc --build client && tsc --build server",
+    "build": "tsc --build client && tsc --build server && cp client/*.html client/dist/ && cp client/*.css client/dist/",
     "start": "node server/dist/server.js"
   },
   "keywords": [],
