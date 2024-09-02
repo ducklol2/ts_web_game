@@ -18,8 +18,8 @@ type Path = {
 }
 
 type Mover = {
-    startAngle?: number;
-    path?: Path;
+    startAngle: number;
+    path: Path;
     speed: number;
     location: Point;
 }
@@ -27,8 +27,10 @@ type Mover = {
 const movers: Mover[] = [];
 for (let i = 0; i < 3; i++) {
     movers.push({
+        startAngle: i * Math.PI/4,
         speed: i * 3,
         location: {x: i * 50, y: i * 50},
+        path: {points: []},
     });
 }
 
@@ -94,7 +96,13 @@ function move() {
 
 function moveMover(mover: Mover) {
     const path = mover.path;
-    if (!path || path.points.length == 0) return;
+    if (!path || path.points.length == 0) {
+        const dX = Math.sin(mover.startAngle) * mover.speed;
+        const dY = Math.cos(mover.startAngle) * mover.speed;
+        mover.location.x += dX;
+        mover.location.y += dY;
+        return;
+    };
 
     if (distance(mover.location, path.points[0]) < 10) {
         path.points.shift();
