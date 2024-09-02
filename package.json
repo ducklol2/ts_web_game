@@ -1,18 +1,15 @@
 {
-  "name": "ts_web_game",
-  "version": "1.0.0",
-  "description": "",
+  "name": "ts-web-game",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "build": "tsc --build client && tsc --build server && cp client/*.html client/dist/ && cp client/*.css client/dist/",
-    "start": "node server/dist/server.js"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "typescript": "^5.5.4"
-  },
-  "dependencies": {
-    "express": "^4.19.2"
+    "typescript": "^5.5.3",
+    "vite": "^5.4.1"
   }
 }

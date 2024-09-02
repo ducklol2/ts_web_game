@@ -1,6 +1,15 @@
 # ts_web_game
 
+Followed https://vitejs.dev/guide/.
+
+## Install
+
 ```
-npm run build
-npm run start
+npm install
+```
+
+## Run
+
+```
+npm run dev
 ```

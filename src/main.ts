@@ -1,12 +1,12 @@
-
+import './style.css'
 
 console.log('hi');
 
-const canvas = document.querySelector('canvas');
+const canvas = document.querySelector('canvas')!;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const context = canvas.getContext('2d');
+const context = canvas.getContext('2d')!;
 
 type Point = {
     x: number;
@@ -20,7 +20,7 @@ type Path = {
 let x = window.innerWidth / 2;
 let y = window.innerHeight / 2;
 let r = 50;
-let rSq = 1;
+// let rSq = 1;
 
 const path: Path = { points: [] };
 window.addEventListener('mousemove', ev => {
