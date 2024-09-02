@@ -17,17 +17,60 @@ type Path = {
     points: Point[];
 }
 
-let x = window.innerWidth / 2;
-let y = window.innerHeight / 2;
-let r = 50;
-// let rSq = 1;
+type Mover = {
+    startAngle?: number;
+    path?: Path;
+    speed: number;
+    location: Point;
+}
 
-const path: Path = { points: [] };
-window.addEventListener('mousemove', ev => {
-    if (ev.buttons) {
-        path.points.push({ x: ev.clientX, y: ev.clientY });
+const movers: Mover[] = [];
+for (let i = 0; i < 3; i++) {
+    movers.push({
+        speed: i * 3,
+        location: {x: i * 50, y: i * 50},
+    });
+}
+
+let currentlySelectedMover: Mover|null = null;
+window.addEventListener('mousemove', handleMouseMove);
+function handleMouseMove(event: MouseEvent) {
+    if (!event.buttons) {
+        currentlySelectedMover = null;
+        return;
     }
-});
+
+    const mousePoint: Point = {x: event.clientX, y: event.clientY};
+    if (!currentlySelectedMover) {
+        currentlySelectedMover = findSelectedMover();
+        if (!currentlySelectedMover) return;
+    }
+    
+    if (!currentlySelectedMover.path) {
+        currentlySelectedMover.path = { points: [] };
+    }
+
+    currentlySelectedMover.path.points.push(mousePoint);
+
+    function findSelectedMover() {
+        let closestTouchedMover: Mover|null = null;
+        let closestTouchedDistance = Number.MAX_VALUE;
+        for (const mover of movers) {
+            const moverDist = distance(mousePoint, mover.location);
+            if (moverDist < 50 && moverDist < closestTouchedDistance) {
+                closestTouchedMover = mover;
+                closestTouchedDistance = moverDist;
+            }
+        }
+        return closestTouchedMover;
+    }
+
+    // path.points.push({ x: ev.clientX, y: ev.clientY });
+}
+
+function distance(a: Point, b: Point) {
+    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+}
 
 setInterval(loop, 50);
 function loop() {
@@ -44,28 +87,38 @@ function loop() {
 }
 
 function move() {
-    if (path.points.length == 0) return;
+    for (const mover of movers) {
+        moveMover(mover);
+    }
+}
 
-    if (Math.abs(x - path.points[0].x) < 10
-     && Math.abs(y - path.points[0].y) < 10) {
+function moveMover(mover: Mover) {
+    const path = mover.path;
+    if (!path || path.points.length == 0) return;
+
+    if (distance(mover.location, path.points[0]) < 10) {
         path.points.shift();
     }
 
     if (path.points.length == 0) return;
 
-    const dX = path.points[0].x - x;
-    const dY = path.points[0].y - y;
+    const dX = path.points[0].x - mover.location.x;
+    const dY = path.points[0].y - mover.location.y;
 
-    x += Math.sign(dX) * Math.min(5, Math.abs(dX));
-    y += Math.sign(dY) * Math.min(5, Math.abs(dY));
+    mover.location.x += Math.sign(dX) * Math.min(5, Math.abs(dX));
+    mover.location.y += Math.sign(dY) * Math.min(5, Math.abs(dY));
 }
 
 function draw() {
-    drawFace(x, y, r);
-    drawPath();
+    for (const mover of movers) {
+        drawFace(mover.location.x, mover.location.y);
+        if (mover.path) {
+            drawPath(mover.path);
+        }
+    }
 }
 
-function drawPath() {
+function drawPath(path: Path) {
     context.beginPath();
 
     let pathX: number;
@@ -77,11 +130,9 @@ function drawPath() {
     context.stroke();
 }
 
-function drawFace(x: number, y: number, r: number) {
+function drawFace(x: number, y: number, r: number = 50) {
     context.beginPath();
-    // r = 50;
     // outside circle head
-    // 75, 75, 50
     context.arc(x, y, r, 0.0, Math.PI * 2);
 
     // mouth
