@@ -48,6 +48,7 @@ function handleMouseMove(event: MouseEvent) {
     if (!currentlySelectedMover) {
         currentlySelectedMover = findSelectedMover();
         if (!currentlySelectedMover) return;
+        currentlySelectedMover.path.points = [];
     }
 
     if (!currentlySelectedMover.path) {
@@ -94,6 +95,7 @@ function moveMover(mover: Mover) {
 
     if (distance(target(), mover.location) < 20) {
         mover.finished = true;
+        mover.path.points = [];
         return;
     }
 
