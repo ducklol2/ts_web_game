@@ -22,19 +22,21 @@ type Mover = {
     path: Path;
     speed: number;
     location: Point;
+    finished: boolean;
 }
 
 const movers: Mover[] = [];
 for (let i = 0; i < 3; i++) {
     movers.push({
-        startAngle: i * Math.PI/4,
+        startAngle: i * Math.PI / 4,
         speed: i * 3,
-        location: {x: i * 50, y: i * 50},
-        path: {points: []},
+        location: { x: i * 50, y: i * 50 },
+        path: { points: [] },
+        finished: false,
     });
 }
 
-let currentlySelectedMover: Mover|null = null;
+let currentlySelectedMover: Mover | null = null;
 window.addEventListener('mousemove', handleMouseMove);
 function handleMouseMove(event: MouseEvent) {
     if (!event.buttons) {
@@ -42,12 +44,12 @@ function handleMouseMove(event: MouseEvent) {
         return;
     }
 
-    const mousePoint: Point = {x: event.clientX, y: event.clientY};
+    const mousePoint: Point = { x: event.clientX, y: event.clientY };
     if (!currentlySelectedMover) {
         currentlySelectedMover = findSelectedMover();
         if (!currentlySelectedMover) return;
     }
-    
+
     if (!currentlySelectedMover.path) {
         currentlySelectedMover.path = { points: [] };
     }
@@ -55,7 +57,7 @@ function handleMouseMove(event: MouseEvent) {
     currentlySelectedMover.path.points.push(mousePoint);
 
     function findSelectedMover() {
-        let closestTouchedMover: Mover|null = null;
+        let closestTouchedMover: Mover | null = null;
         let closestTouchedDistance = Number.MAX_VALUE;
         for (const mover of movers) {
             const moverDist = distance(mousePoint, mover.location);
@@ -79,13 +81,6 @@ function loop() {
     move();
     context.clearRect(0, 0, canvas.width, canvas.height);
     draw();
-    // if (r === 50) {
-    //     rSq = -1;
-    // }
-    // if (r === 10) {
-    //     rSq = 1;
-    // }
-    // r += rSq;
 }
 
 function move() {
@@ -95,6 +90,13 @@ function move() {
 }
 
 function moveMover(mover: Mover) {
+    if (mover.finished) return;
+
+    if (distance(target(), mover.location) < 20) {
+        mover.finished = true;
+        return;
+    }
+
     const path = mover.path;
     if (!path || path.points.length == 0) {
         const dX = Math.sin(mover.startAngle) * mover.speed;
@@ -117,7 +119,18 @@ function moveMover(mover: Mover) {
     mover.location.y += Math.sign(dY) * Math.min(5, Math.abs(dY));
 }
 
+function target(): Point {
+    return { x: canvas.width / 2, y: canvas.height / 2 };
+}
+
 function draw() {
+
+    context.beginPath();
+    context.fillStyle = "lightblue";
+    const { x, y } = target();
+    context.arc(x, y, 100, 0, Math.PI * 2);
+    context.fill();
+
     for (const mover of movers) {
         drawFace(mover.location.x, mover.location.y);
         if (mover.path) {
