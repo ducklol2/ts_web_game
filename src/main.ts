@@ -122,10 +122,12 @@ function move() {
         switch (movers[i].state) {
             case MoverState.GOAL:
                 movers.splice(i, 1);
+                spawn();
                 score++;
                 break;
             case MoverState.OUT_OF_BOUNDS:
                 movers.splice(i, 1);
+                spawn();
                 score--;
                 break;
         }
