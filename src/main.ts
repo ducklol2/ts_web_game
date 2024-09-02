@@ -15,12 +15,18 @@ type Path = {
     points: Point[];
 }
 
+enum MoverState {
+    MOVING,
+    GOAL,
+    OUT_OF_BOUNDS,
+}
+
 type Mover = {
     startAngle: number;
     path: Path;
     speed: number;
     location: Point;
-    finished: boolean;
+    state: MoverState;
 }
 
 const movers: Mover[] = [];
@@ -40,7 +46,7 @@ function spawn() {
         speed: Math.random() * 10,
         location,
         path: { points: [] },
-        finished: false,
+        state: MoverState.MOVING,
     });
 }
 
@@ -110,19 +116,31 @@ function loop() {
 }
 
 function move() {
-    for (const mover of movers) {
-        moveMover(mover);
+    for (let i = movers.length - 1; i >= 0; i--) {
+        moveMover(movers[i]);
+
+        switch (movers[i].state) {
+            case MoverState.GOAL:
+                movers.splice(i, 1);
+                score++;
+                break;
+            case MoverState.OUT_OF_BOUNDS:
+                movers.splice(i, 1);
+                score--;
+                break;
+        }
     }
 }
 
 let score = 0;
 function moveMover(mover: Mover) {
-    if (mover.finished) return;
-
     if (distance(target(), mover.location) < 20) {
-        mover.finished = true;
-        mover.path.points = [];
-        score++;
+        mover.state = MoverState.GOAL;
+        return;
+    }
+
+    if (distance(target(), mover.location) > canvas.width / 2) {
+        mover.state = MoverState.OUT_OF_BOUNDS;
         return;
     }
 
