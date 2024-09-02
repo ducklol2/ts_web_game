@@ -1,7 +1,5 @@
 import './style.css'
 
-console.log('hi');
-
 const canvas = document.querySelector('canvas')!;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -29,7 +27,7 @@ const movers: Mover[] = [];
 for (let i = 0; i < 3; i++) {
     movers.push({
         startAngle: i * Math.PI / 4,
-        speed: i * 3,
+        speed: i * 3 + 1,
         location: { x: i * 50, y: i * 50 },
         path: { points: [] },
         finished: false,
@@ -90,12 +88,14 @@ function move() {
     }
 }
 
+let score = 0;
 function moveMover(mover: Mover) {
     if (mover.finished) return;
 
     if (distance(target(), mover.location) < 20) {
         mover.finished = true;
         mover.path.points = [];
+        score++;
         return;
     }
 
@@ -125,12 +125,13 @@ function target(): Point {
     return { x: canvas.width / 2, y: canvas.height / 2 };
 }
 
+const startTime = new Date();
 function draw() {
 
     context.beginPath();
     context.fillStyle = "lightblue";
     const { x, y } = target();
-    context.arc(x, y, 100, 0, Math.PI * 2);
+    context.arc(x, y, 50, 0, Math.PI * 2);
     context.fill();
 
     for (const mover of movers) {
@@ -139,6 +140,10 @@ function draw() {
             drawPath(mover.path);
         }
     }
+
+    context.font = 'bold 48px serif';
+    context.fillText(`Time: ${Math.floor((Date.now() - startTime.getTime()) / 1000)}`, canvas.width - 400, 100);
+    context.fillText(`Score: ${score}`, canvas.width - 400, 150);
 }
 
 function drawPath(path: Path) {
