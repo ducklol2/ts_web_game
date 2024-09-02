@@ -25,10 +25,20 @@ type Mover = {
 
 const movers: Mover[] = [];
 for (let i = 0; i < 3; i++) {
+    spawn();
+}
+
+function spawn() {
+    const positionFromCenterAngle = Math.random() * Math.PI * 2;
+    const location = {
+        x: Math.sin(positionFromCenterAngle) * canvas.width / 2 + canvas.width / 2,
+        y: Math.cos(positionFromCenterAngle) * canvas.width / 2 + canvas.height / 2,
+    };
+
     movers.push({
-        startAngle: i * Math.PI / 4,
-        speed: i * 3 + 1,
-        location: { x: i * 50, y: i * 50 },
+        startAngle: positionFromCenterAngle + Math.PI + Math.random() * Math.PI/20,
+        speed: Math.random() * 10,
+        location,
         path: { points: [] },
         finished: false,
     });
