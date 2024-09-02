@@ -35,14 +35,31 @@ for (let i = 0; i < 3; i++) {
 }
 
 let currentlySelectedMover: Mover | null = null;
+
 window.addEventListener('mousemove', handleMouseMove);
+window.addEventListener('touchmove', handleTouchMove);
+window.addEventListener('touchend', event => {
+    currentlySelectedMover = null;
+    event.stopPropagation();
+    return;
+});
+
+function handleTouchMove(event: TouchEvent) {
+    handleInteraction({ x: event.touches[0].clientX, y: event.touches[0].clientY });
+    event.stopPropagation();
+}
+
 function handleMouseMove(event: MouseEvent) {
+    event.stopPropagation();
     if (!event.buttons) {
         currentlySelectedMover = null;
         return;
     }
 
-    const mousePoint: Point = { x: event.clientX, y: event.clientY };
+    handleInteraction({ x: event.clientX, y: event.clientY });
+}
+
+function handleInteraction(point: Point) {
     if (!currentlySelectedMover) {
         currentlySelectedMover = findSelectedMover();
         if (!currentlySelectedMover) return;
@@ -53,13 +70,13 @@ function handleMouseMove(event: MouseEvent) {
         currentlySelectedMover.path = { points: [] };
     }
 
-    currentlySelectedMover.path.points.push(mousePoint);
+    currentlySelectedMover.path.points.push(point);
 
     function findSelectedMover() {
         let closestTouchedMover: Mover | null = null;
         let closestTouchedDistance = Number.MAX_VALUE;
         for (const mover of movers) {
-            const moverDist = distance(mousePoint, mover.location);
+            const moverDist = distance(point, mover.location);
             if (moverDist < 50 && moverDist < closestTouchedDistance) {
                 closestTouchedMover = mover;
                 closestTouchedDistance = moverDist;
