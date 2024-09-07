@@ -23,6 +23,7 @@ export function drawPath(path: Path) {
 }
 
 export function drawFace(x: number, y: number, r: number = 50) {
+    context.fillStyle = 'black';
     context.beginPath();
     // outside circle head
     context.arc(x, y, r, 0.0, Math.PI * 2);
@@ -33,7 +34,6 @@ export function drawFace(x: number, y: number, r: number = 50) {
     context.stroke();
 
     // left eye
-    context.fillStyle = 'black';
     context.beginPath();
     context.moveTo(x - r * 0.2, y - r * 0.2);
     context.arc(x - r * 0.3, y - r * 0.2, r * 0.1, 0.0, Math.PI * 2);
@@ -43,4 +43,18 @@ export function drawFace(x: number, y: number, r: number = 50) {
     context.arc(x + r * 0.3, y - r * 0.2, r * 0.1, 0, Math.PI * 2);
     context.fill();
 
+}
+
+export function drawTarget() {
+    context.beginPath();
+    context.fillStyle = "lightblue";
+    const { x, y } = target();
+    context.arc(x, y, 50, 0, Math.PI * 2);
+    context.fill();
+}
+
+export function drawStats(startTime: Date, score: number) {
+    context.font = 'bold 48px serif';
+    context.fillText(`Time: ${Math.floor((Date.now() - startTime.getTime()) / 1000)}`, canvas.width - 400, 100);
+    context.fillText(`Score: ${score}`, canvas.width - 400, 150);
 }

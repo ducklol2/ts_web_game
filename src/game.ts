@@ -1,4 +1,4 @@
-import {canvas, context, target, drawFace, drawPath} from './draw';
+import {canvas, context, drawFace, drawPath, drawTarget, drawStats} from './draw';
 import {Point, Mover, MoverState} from './types';
 import {spawn, moveMover, distance} from './mover';
 
@@ -42,12 +42,7 @@ function move() {
 
 
 function draw() {
-
-    context.beginPath();
-    context.fillStyle = "lightblue";
-    const { x, y } = target();
-    context.arc(x, y, 50, 0, Math.PI * 2);
-    context.fill();
+    drawTarget();
 
     for (const mover of movers) {
         drawFace(mover.location.x, mover.location.y);
@@ -56,9 +51,7 @@ function draw() {
         }
     }
 
-    context.font = 'bold 48px serif';
-    context.fillText(`Time: ${Math.floor((Date.now() - startTime.getTime()) / 1000)}`, canvas.width - 400, 100);
-    context.fillText(`Score: ${score}`, canvas.width - 400, 150);
+    drawStats(startTime, score);
 }
 
 
