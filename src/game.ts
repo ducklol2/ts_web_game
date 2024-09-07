@@ -5,30 +5,53 @@ import {
   drawStats,
   drawDebug,
   drawMoverFaceAndPath,
+  drawButtons,
 } from './draw';
-import { Point, Mover, MoverState } from './types';
+import { Point, Mover, MoverState, Button } from './types';
 import { spawn, moveMover, distance } from './mover';
+import { inputs, InputType } from './input';
+
+const COLLISION_DISTANCE = 30;
+const buttons: Button[] = [
+  {
+    location: {x: 100, y: 100},
+    size: [150, 75],
+    text: "Reset",
+    handler: () => resetGame()
+  }
+];
 
 let score = 0;
-const startTime = new Date();
+let startTime = new Date();
 let lastFrameMs: DOMHighResTimeStamp = 0;
-const movers: Mover[] = [];
-const COLLISION_DISTANCE = 30;
+let movers: Mover[] = [];
+let requestAnimationFrameId = 0;
 
 export function runGame() {
+  score = 0;
+  startTime = new Date();
+  lastFrameMs = 0;
+  movers = [];
+
   for (let i = 0; i < 3; i++) {
     movers.push(cleanSpawn());
   }
 
-  requestAnimationFrame(loop);
+  requestAnimationFrameId = requestAnimationFrame(loop);
+}
+
+function resetGame() {
+  cancelAnimationFrame(requestAnimationFrameId);
+  runGame();
 }
 
 function loop(timestampMs: DOMHighResTimeStamp) {
+  handleInputs();
   context.clearRect(0, 0, canvas.width, canvas.height);
   move(timestampMs - lastFrameMs);
   if (!handleCollision()) {
     lastFrameMs = timestampMs;
-    requestAnimationFrame(loop);
+    requestAnimationFrameId = requestAnimationFrame(loop);
   }
   draw();
 }
@@ -102,34 +125,47 @@ function draw() {
   drawTarget();
   movers.map(drawMoverFaceAndPath);
   drawStats(startTime, score);
+  drawButtons(buttons);
 }
 
 let currentlySelectedMover: Mover | null = null;
+function handleInputs() {
+  while (inputs.length) {
+    const input = inputs.shift();
+    switch (input?.type) {
+      case InputType.Drag:
+        // Check for button click
+        const button = getButtonForPoint(input.location!);
+        if (button && !currentlySelectedMover) {
+          button.handler();
+          break;
+        }
 
-window.addEventListener('mousemove', handleMouseMove);
-window.addEventListener('touchmove', handleTouchMove);
-window.addEventListener('touchend', (event) => {
-  currentlySelectedMover = null;
-  event.stopPropagation();
-  return;
-});
-
-function handleTouchMove(event: TouchEvent) {
-  handleInteraction({
-    x: event.touches[0].clientX,
-    y: event.touches[0].clientY,
-  });
-  event.stopPropagation();
+        handleInteraction(input.location!);
+        break;
+      case InputType.DragStop:
+        currentlySelectedMover = null;
+        break;
+      case InputType.Reset:
+        resetGame();
+        break;
+    }
+  }
 }
 
-function handleMouseMove(event: MouseEvent) {
-  event.stopPropagation();
-  if (!event.buttons) {
-    currentlySelectedMover = null;
-    return;
+function getButtonForPoint(point: Point): Button|null {
+  for (const button of buttons) {
+    if (
+      point.x >= button.location.x - button.size[0] / 2 &&
+      point.y >= button.location.y - button.size[1] / 2 &&
+      point.x < button.location.x + button.size[0] / 2 &&
+      point.y < button.location.y + button.size[1] / 2
+    ) {
+      return button;
+    }
   }
 
-  handleInteraction({ x: event.clientX, y: event.clientY });
+  return null;
 }
 
 function handleInteraction(point: Point) {

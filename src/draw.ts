@@ -1,4 +1,4 @@
-import { Path, Point, Mover, MoverState, MoverType } from './types';
+import { Path, Point, Mover, MoverState, MoverType, Button } from './types';
 import sharkSrc from './shark.png';
 import raySrc from './ray.png';
 import turtleSrc from './turtle.png';
@@ -142,3 +142,21 @@ rayImg.src = raySrc;
 
 const turtleImg = new Image();
 turtleImg.src = turtleSrc;
+
+export function drawButtons(buttons: Button[]) {
+  for (const button of buttons) {
+    context.fillStyle = 'lightred';
+    context.fillRect(
+      button.location.x - button.size[0]/2,
+      button.location.y - button.size[1]/2,
+      button.size[0],
+      button.size[1],
+    )
+    
+    context.fillStyle = 'white';
+    context.font = 'bold 32px serif';
+    context.textAlign = 'center';
+    context.textBaseline = 'middle'
+    context.fillText(button.text, button.location.x, button.location.y);
+  }
+}

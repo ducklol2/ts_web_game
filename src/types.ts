@@ -30,3 +30,10 @@ export type Mover = {
   type: MoverType;
   size: number;
 };
+
+export type Button = {
+  location: Point,
+  text: string,
+  size: [number, number],
+  handler: () => void
+}
