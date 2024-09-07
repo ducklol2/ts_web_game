@@ -13,10 +13,11 @@ let score = 0;
 const startTime = new Date();
 let lastFrameMs: DOMHighResTimeStamp = 0;
 const movers: Mover[] = [];
+const COLLISION_DISTANCE = 30;
 
 export function runGame() {
     for (let i = 0; i < 3; i++) {
-        movers.push(spawn());
+        movers.push(cleanSpawn());
     }
 
     requestAnimationFrame(loop);
@@ -41,7 +42,7 @@ function handleCollision(): boolean {
     for (let i = 0; i < movers.length; i++) {
         for (let j = 1; j < movers.length; j++) {
             if (i === j) break;
-            if (distance(movers[i].location, movers[j].location) < 30) {
+            if (distance(movers[i].location, movers[j].location) < COLLISION_DISTANCE) {
                 movers[i].state = MoverState.COLLIDED;
                 movers[j].state = MoverState.COLLIDED;
                 return true;
@@ -50,6 +51,24 @@ function handleCollision(): boolean {
     }
     return false;
 }
+
+function cleanSpawn(): Mover {
+    let candidateMover = spawn();
+    while (possibleCollision(candidateMover)) {
+        candidateMover = spawn();
+    }
+    return candidateMover;
+}
+
+function possibleCollision(mover: Mover): boolean {
+    for (let i = 0; i < movers.length; i++) {
+        if (distance(movers[i].location, mover.location) < COLLISION_DISTANCE) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function move(elapsedMs: DOMHighResTimeStamp) {
   for (let i = movers.length - 1; i >= 0; i--) {
     moveMover(movers[i], elapsedMs);
@@ -57,12 +76,12 @@ function move(elapsedMs: DOMHighResTimeStamp) {
     switch (movers[i].state) {
       case MoverState.GOAL:
         movers.splice(i, 1);
-        movers.push(spawn());
+        movers.push(cleanSpawn());
         score++;
         break;
       case MoverState.OUT_OF_BOUNDS:
         movers.splice(i, 1);
-        movers.push(spawn());
+        movers.push(cleanSpawn());
         score--;
         break;
     }
