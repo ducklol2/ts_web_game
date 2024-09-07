@@ -1,10 +1,10 @@
 import {
-  canvas,
-  context,
-  drawTarget,
-  drawStats,
-  drawDebug,
-  drawMoverFaceAndPath,
+    canvas,
+    context,
+    drawTarget,
+    drawStats,
+    drawDebug,
+    drawMoverFaceAndPath,
 } from "./draw";
 import { Point, Mover, MoverState } from "./types";
 import { spawn, moveMover, distance } from "./mover";
@@ -62,7 +62,9 @@ function cleanSpawn(): Mover {
 
 function possibleCollision(mover: Mover): boolean {
     for (let i = 0; i < movers.length; i++) {
-        if (distance(movers[i].location, mover.location) < COLLISION_DISTANCE) {
+        if (distance(movers[i].location, mover.location) <
+            // Give some buffer so things don't collide too soon.
+            (COLLISION_DISTANCE * 5)) {
             return true;
         }
     }
@@ -70,28 +72,28 @@ function possibleCollision(mover: Mover): boolean {
 }
 
 function move(elapsedMs: DOMHighResTimeStamp) {
-  for (let i = movers.length - 1; i >= 0; i--) {
-    moveMover(movers[i], elapsedMs);
+    for (let i = movers.length - 1; i >= 0; i--) {
+        moveMover(movers[i], elapsedMs);
 
-    switch (movers[i].state) {
-      case MoverState.GOAL:
-        movers.splice(i, 1);
-        movers.push(cleanSpawn());
-        score++;
-        break;
-      case MoverState.OUT_OF_BOUNDS:
-        movers.splice(i, 1);
-        movers.push(cleanSpawn());
-        score--;
-        break;
+        switch (movers[i].state) {
+            case MoverState.GOAL:
+                movers.splice(i, 1);
+                movers.push(cleanSpawn());
+                score++;
+                break;
+            case MoverState.OUT_OF_BOUNDS:
+                movers.splice(i, 1);
+                movers.push(cleanSpawn());
+                score--;
+                break;
+        }
     }
-  }
 }
 
 function draw() {
-  drawTarget();
-  movers.map(drawMoverFaceAndPath);
-  drawStats(startTime, score);
+    drawTarget();
+    movers.map(drawMoverFaceAndPath);
+    drawStats(startTime, score);
 }
 
 let currentlySelectedMover: Mover | null = null;
@@ -99,55 +101,55 @@ let currentlySelectedMover: Mover | null = null;
 window.addEventListener("mousemove", handleMouseMove);
 window.addEventListener("touchmove", handleTouchMove);
 window.addEventListener("touchend", (event) => {
-  currentlySelectedMover = null;
-  event.stopPropagation();
-  return;
+    currentlySelectedMover = null;
+    event.stopPropagation();
+    return;
 });
 
 function handleTouchMove(event: TouchEvent) {
-  handleInteraction({
-    x: event.touches[0].clientX,
-    y: event.touches[0].clientY,
-  });
-  event.stopPropagation();
+    handleInteraction({
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY,
+    });
+    event.stopPropagation();
 }
 
 function handleMouseMove(event: MouseEvent) {
-  event.stopPropagation();
-  if (!event.buttons) {
-    currentlySelectedMover = null;
-    return;
-  }
+    event.stopPropagation();
+    if (!event.buttons) {
+        currentlySelectedMover = null;
+        return;
+    }
 
-  handleInteraction({ x: event.clientX, y: event.clientY });
+    handleInteraction({ x: event.clientX, y: event.clientY });
 }
 
 function handleInteraction(point: Point) {
-  if (!currentlySelectedMover) {
-    currentlySelectedMover = findSelectedMover();
-    if (!currentlySelectedMover) return;
-    currentlySelectedMover.path.points = [];
-  }
-
-  if (!currentlySelectedMover.path) {
-    currentlySelectedMover.path = { points: [] };
-  }
-
-  if (currentlySelectedMover.path.points.length) {
-    // Only take point if a certain distance away to avoid dense lines.
-    if (
-      distance(
-        point,
-        currentlySelectedMover.path.points[
-          currentlySelectedMover.path.points.length - 1
-        ]
-      ) > 20
-    ) {
-      currentlySelectedMover.path.points.push(point);
+    if (!currentlySelectedMover) {
+        currentlySelectedMover = findSelectedMover();
+        if (!currentlySelectedMover) return;
+        currentlySelectedMover.path.points = [];
     }
-  } else {
-    currentlySelectedMover.path.points.push(point);
-  }
+
+    if (!currentlySelectedMover.path) {
+        currentlySelectedMover.path = { points: [] };
+    }
+
+    if (currentlySelectedMover.path.points.length) {
+        // Only take point if a certain distance away to avoid dense lines.
+        if (
+            distance(
+                point,
+                currentlySelectedMover.path.points[
+                currentlySelectedMover.path.points.length - 1
+                ]
+            ) > 20
+        ) {
+            currentlySelectedMover.path.points.push(point);
+        }
+    } else {
+        currentlySelectedMover.path.points.push(point);
+    }
 
     function findSelectedMover() {
         let closestTouchedMover: Mover | null = null;
