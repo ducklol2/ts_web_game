@@ -2,6 +2,7 @@ import { Path, Point, Mover, MoverState, MoverType } from "./types";
 import sharkSrc from "./shark.png";
 import raySrc from "./ray.png";
 import turtleSrc from "./turtle.png";
+import { TARGET_RADIUS } from "./target";
 
 export const canvas = document.querySelector("canvas")!;
 canvas.width = window.innerWidth;
@@ -100,7 +101,7 @@ export function drawTarget() {
   context.beginPath();
   context.fillStyle = "lightblue";
   const { x, y } = target();
-  context.arc(x, y, 50, 0, Math.PI * 2);
+  context.arc(x, y, TARGET_RADIUS, 0, Math.PI * 2);
   context.fill();
 }
 

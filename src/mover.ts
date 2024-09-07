@@ -1,5 +1,6 @@
 import { MoverState, Mover, Point, MoverType } from "./types";
 import { canvas, target } from "./draw";
+import { TARGET_RADIUS } from "./target";
 
 const MOVER_TYPE_TO_SPEED = new Map<MoverType, number>([
   [MoverType.SLOW, 0.06],
@@ -62,7 +63,7 @@ function angle(a: Point, b: Point) {
 }
 
 export function moveMover(mover: Mover, elapsedMs: DOMHighResTimeStamp) {
-  if (distance(target(), mover.location) < 20) {
+  if (distance(target(), mover.location) < TARGET_RADIUS) {
     mover.state = MoverState.GOAL;
     return;
   }
