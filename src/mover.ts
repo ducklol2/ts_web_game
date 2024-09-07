@@ -1,4 +1,4 @@
-import { MoverState, Mover, Point } from "./types";
+import { MoverState, Mover, Point, MoverType} from "./types";
 import { canvas, target } from "./draw";
 
 export function spawn(): Mover {
@@ -11,6 +11,8 @@ export function spawn(): Mover {
       canvas.height / 2,
   };
 
+  const typeIndex = Math.floor(Math.random() * Object.values(MoverType).length);
+
   return {
     startAngle:
       positionFromCenterAngle + Math.PI + (Math.random() * Math.PI) / 20,
@@ -18,6 +20,7 @@ export function spawn(): Mover {
     location,
     path: { points: [] },
     state: MoverState.MOVING,
+    type: Object.values(MoverType)[typeIndex] as MoverType,
   };
 }
 

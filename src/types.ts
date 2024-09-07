@@ -7,6 +7,12 @@ export type Path = {
     points: Point[];
 }
 
+export enum MoverType {
+    SLOW,
+    MEDIUM,
+    FAST
+}
+
 export enum MoverState {
     MOVING,
     GOAL,
@@ -21,4 +27,5 @@ export type Mover = {
     speed: number;
     location: Point;
     state: MoverState;
+    type: MoverType;
 }
