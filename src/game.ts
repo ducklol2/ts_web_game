@@ -1,5 +1,5 @@
 import {canvas, context, target, drawFace, drawPath} from './draw';
-import {Mover, MoverState} from './types';
+import {Point, Mover, MoverState} from './types';
 import {spawn, moveMover, distance} from './mover';
 
 let score = 0;
