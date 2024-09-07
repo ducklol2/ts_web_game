@@ -31,6 +31,19 @@ export function distance(a: Point, b: Point) {
     return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 }
 
+/**
+ * Calculates the angle, in radians, from |a| pointing to |b|, with positive X vector as 0.
+ * @param a Starting point.
+ * @param b Point to face towards.
+ * @returns Angle from a to b, in radians. (A full circle is Math.PI * 2.)
+ */
+function angle(a: Point, b: Point) {
+  const dX = b.x - a.x;
+  const dY = b.y - a.y;
+
+  return Math.atan2(dX, dY);
+}
+
 const speedMultiplier = 0.2;
 export function moveMover(mover: Mover, elapsedMs: DOMHighResTimeStamp) {
     if (distance(target(), mover.location) < 20) {
@@ -43,25 +56,66 @@ export function moveMover(mover: Mover, elapsedMs: DOMHighResTimeStamp) {
         return;
     }
 
-    const path = mover.path;
-    const speed = mover.speed * speedMultiplier * elapsedMs;
-    if (!path || path.points.length == 0) {
-        const dX = Math.sin(mover.startAngle) * speed;
-        const dY = Math.cos(mover.startAngle) * speed;
+  const path = mover.path;
+  let distanceToTravel = mover.speed * speedMultiplier * elapsedMs;
+
+  if (path && path.points.length) {
+    // Travel along path.
+    while (path.points.length) {
+      const distanceToNextPoint = distance(mover.location, path.points[0]);
+      mover.startAngle = angle(mover.location, path.points[0]);
+
+      if (
+        isNaN(mover.location.x) ||
+        isNaN(mover.location.y) ||
+        isNaN(mover.startAngle)
+      ) {
+        debugger;
+      }
+
+      // If next point is far away, travel part way to it.
+      if (distanceToNextPoint > distanceToTravel) {
+        const dX = Math.sin(mover.startAngle) * distanceToTravel;
+        const dY = Math.cos(mover.startAngle) * distanceToTravel;
         mover.location.x += dX;
         mover.location.y += dY;
+
+        if (
+          isNaN(mover.location.x) ||
+          isNaN(mover.location.y) ||
+          isNaN(mover.startAngle)
+        ) {
+          debugger;
+        }
+
         return;
+      }
+
+      // Next point is within distance; move to it, remove distance, & loop.
+      mover.location = path.points.shift()!;
+      distanceToTravel -= distanceToNextPoint;
+
+      if (
+        isNaN(mover.location.x) ||
+        isNaN(mover.location.y) ||
+        isNaN(mover.startAngle)
+      ) {
+        debugger;
+      }
     }
+  }
 
-    if (distance(mover.location, path.points[0]) < 10) {
-        path.points.shift();
-    }
+  // No path; keep moving in current direction.
+  const dX = Math.sin(mover.startAngle) * distanceToTravel;
+  const dY = Math.cos(mover.startAngle) * distanceToTravel;
+  mover.location.x += dX;
+  mover.location.y += dY;
 
-    if (path.points.length == 0) return;
-
-    const dX = path.points[0].x - mover.location.x;
-    const dY = path.points[0].y - mover.location.y;
-
-    mover.location.x += Math.sign(dX) * Math.min(speed, Math.abs(dX));
-    mover.location.y += Math.sign(dY) * Math.min(speed, Math.abs(dY));
+  if (
+    isNaN(mover.location.x) ||
+    isNaN(mover.location.y) ||
+    isNaN(mover.startAngle)
+  ) {
+    debugger;
+  }
 }

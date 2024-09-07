@@ -87,3 +87,20 @@ export function drawStats(startTime: Date, score: number) {
     context.fillText(`Time: ${Math.floor((Date.now() - startTime.getTime()) / 1000)}`, canvas.width - 400, 100);
     context.fillText(`Score: ${score}`, canvas.width - 400, 150);
 }
+
+export function drawDebug(movers: Mover[]) {
+    context.font = 'bold 12px serif';
+    let y = 50;
+    for (const mover of movers) {
+        const text =
+`x: ${mover.location.x.toFixed()}
+y: ${mover.location.y.toFixed()}
+speed: ${mover.speed}
+angle: ${mover.startAngle}`;
+        for (const line of text.split('\n')) {
+            context.fillText(line, 50, y);
+            y += 25;
+        }
+        y += 25;
+    }
+}
