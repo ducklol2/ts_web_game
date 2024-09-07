@@ -1,4 +1,4 @@
-import {Path, Point} from './types';
+import {Path, Point, Mover} from './types';
 
 export const canvas = document.querySelector('canvas')!;
 canvas.width = window.innerWidth;
@@ -8,6 +8,14 @@ export const context = canvas.getContext('2d')!;
 
 export function target(): Point {
     return { x: canvas.width / 2, y: canvas.height / 2 };
+}
+
+export function drawMoverFaceAndPath(mover: Mover) {
+    drawFace(mover.location.x, mover.location.y);
+    if (mover.path) {
+        drawPath(mover.path);
+    }
+
 }
 
 export function drawPath(path: Path) {

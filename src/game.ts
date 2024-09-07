@@ -1,4 +1,4 @@
-import {canvas, context, drawFace, drawPath, drawTarget, drawStats} from './draw';
+import {canvas, context, drawTarget, drawStats, drawMoverFaceAndPath} from './draw';
 import {Point, Mover, MoverState} from './types';
 import {spawn, moveMover, distance} from './mover';
 
@@ -43,14 +43,7 @@ function move() {
 
 function draw() {
     drawTarget();
-
-    for (const mover of movers) {
-        drawFace(mover.location.x, mover.location.y);
-        if (mover.path) {
-            drawPath(mover.path);
-        }
-    }
-
+    movers.map(drawMoverFaceAndPath);
     drawStats(startTime, score);
 }
 
