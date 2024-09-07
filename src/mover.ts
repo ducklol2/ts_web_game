@@ -2,14 +2,30 @@ import { MoverState, Mover, Point, MoverType } from "./types";
 import { canvas, target } from "./draw";
 
 export function spawn(): Mover {
-    const positionFromCenterAngle = Math.random() * Math.PI * 2;
+    const isHorizontalSpawn = Math.round(Math.random())
+    const isFarSpawn = Math.round(Math.random());
     const location = {
-        x:
-            (Math.sin(positionFromCenterAngle) * canvas.width) / 2 + canvas.width / 2,
-        y:
-            (Math.cos(positionFromCenterAngle) * canvas.width) / 2 +
-            canvas.height / 2,
+        x: isHorizontalSpawn ? (Math.random() * canvas.width) : (isFarSpawn ? canvas.width : 0),
+        y: isHorizontalSpawn ? (isFarSpawn ? canvas.height : 0) : (Math.random() * canvas.height),
     };
+    
+    let startAngle = 0;
+    if (isHorizontalSpawn && !isFarSpawn) {
+        // Spawns from top of screen, start angle [0.5PI, 1.5PI].
+        startAngle = (Math.random() * Math.PI) + (0.5 * Math.PI);
+    }
+    if (isHorizontalSpawn && isFarSpawn) {
+        // Spawns from bottom of screen, start angle [1.5PI, 2.5PI].
+        startAngle = (Math.random() * Math.PI) + (1.5 * Math.PI);
+    }
+    if (!isHorizontalSpawn && isFarSpawn) {
+        // Spawns from right of screen, start angle [1.0PI, 2.0PI].
+        startAngle = (Math.random() * Math.PI) + Math.PI;
+    }
+    if (!isHorizontalSpawn && !isFarSpawn) {
+        // Spawns from top of left, start angle [0.0PI, 1.0PI].
+        startAngle = (Math.random() * Math.PI);
+    }
 
     // Enums are weird, it has both the number to string mapping and the string to
     // number mapping, so divide the length by two.
@@ -17,8 +33,7 @@ export function spawn(): Mover {
     const type = typeIndex as MoverType;
 
     return {
-        startAngle:
-            positionFromCenterAngle + Math.PI + (Math.random() * Math.PI) / 20,
+        startAngle,
         speed: Math.random(),
         location,
         path: { points: [] },
