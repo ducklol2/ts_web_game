@@ -1,34 +1,34 @@
-import { Path, Point, Mover, MoverState, MoverType } from "./types";
-import sharkSrc from "./shark.png";
-import raySrc from "./ray.png";
-import turtleSrc from "./turtle.png";
-import { TARGET_RADIUS } from "./target";
+import { Path, Point, Mover, MoverState, MoverType } from './types';
+import sharkSrc from './shark.png';
+import raySrc from './ray.png';
+import turtleSrc from './turtle.png';
+import { TARGET_RADIUS } from './target';
 
-export const canvas = document.querySelector("canvas")!;
+export const canvas = document.querySelector('canvas')!;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-export const context = canvas.getContext("2d")!;
+export const context = canvas.getContext('2d')!;
 
 export function target(): Point {
   return { x: canvas.width / 2, y: canvas.height / 2 };
 }
 
 export function drawMoverFaceAndPath(mover: Mover) {
-  let color = "green";
+  let color = 'green';
   if (mover.state === MoverState.COLLIDED) {
-    color = "red";
+    color = 'red';
   } else {
     // Color based on type
     switch (mover.type) {
       case MoverType.SLOW:
-        color = "green";
+        color = 'green';
         break;
       case MoverType.MEDIUM:
-        color = "maroon";
+        color = 'maroon';
         break;
       case MoverType.FAST:
-        color = "grey";
+        color = 'grey';
         break;
     }
   }
@@ -99,15 +99,15 @@ export function drawFace(x: number, y: number, r: number = 50) {
 
 export function drawTarget() {
   context.beginPath();
-  context.fillStyle = "lightblue";
+  context.fillStyle = 'lightblue';
   const { x, y } = target();
   context.arc(x, y, TARGET_RADIUS, 0, Math.PI * 2);
   context.fill();
 }
 
 export function drawStats(startTime: Date, score: number) {
-  context.fillStyle = "blue";
-  context.font = "bold 48px serif";
+  context.fillStyle = 'blue';
+  context.font = 'bold 48px serif';
   context.fillText(
     `Time: ${Math.floor((Date.now() - startTime.getTime()) / 1000)}`,
     canvas.width - 400,
@@ -117,14 +117,14 @@ export function drawStats(startTime: Date, score: number) {
 }
 
 export function drawDebug(movers: Mover[]) {
-  context.font = "bold 12px serif";
+  context.font = 'bold 12px serif';
   let y = 50;
   for (const mover of movers) {
     const text = `x: ${mover.location.x.toFixed()}
 y: ${mover.location.y.toFixed()}
 speed: ${mover.speed}
 angle: ${mover.angle}`;
-    for (const line of text.split("\n")) {
+    for (const line of text.split('\n')) {
       context.fillText(line, 50, y);
       y += 25;
     }

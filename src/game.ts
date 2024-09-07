@@ -5,9 +5,9 @@ import {
   drawStats,
   drawDebug,
   drawMoverFaceAndPath,
-} from "./draw";
-import { Point, Mover, MoverState } from "./types";
-import { spawn, moveMover, distance } from "./mover";
+} from './draw';
+import { Point, Mover, MoverState } from './types';
+import { spawn, moveMover, distance } from './mover';
 
 let score = 0;
 const startTime = new Date();
@@ -106,9 +106,9 @@ function draw() {
 
 let currentlySelectedMover: Mover | null = null;
 
-window.addEventListener("mousemove", handleMouseMove);
-window.addEventListener("touchmove", handleTouchMove);
-window.addEventListener("touchend", (event) => {
+window.addEventListener('mousemove', handleMouseMove);
+window.addEventListener('touchmove', handleTouchMove);
+window.addEventListener('touchend', (event) => {
   currentlySelectedMover = null;
   event.stopPropagation();
   return;
@@ -149,8 +149,7 @@ function handleInteraction(point: Point) {
       distance(
         point,
         currentlySelectedMover.path.points[
-          currentlySelectedMover.path.points.length - 1
-        ]
+        currentlySelectedMover.path.points.length - 1]
       ) > 20
     ) {
       currentlySelectedMover.path.points.push(point);
