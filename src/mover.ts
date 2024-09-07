@@ -1,6 +1,12 @@
 import { MoverState, Mover, Point, MoverType } from "./types";
 import { canvas, target } from "./draw";
 
+const MOVER_TYPE_TO_SPEED = new Map<MoverType, number>([
+    [MoverType.SLOW, 0.06],
+    [MoverType.MEDIUM, 0.12],
+    [MoverType.FAST, 0.17],
+]);
+
 export function spawn(): Mover {
     const isHorizontalSpawn = Math.round(Math.random())
     const isFarSpawn = Math.round(Math.random());
@@ -20,7 +26,7 @@ export function spawn(): Mover {
 
     return {
         angle: startAngle,
-        speed: Math.random(),
+        speed: MOVER_TYPE_TO_SPEED.get(type) || 0,
         location,
         path: { points: [] },
         state: MoverState.MOVING,
@@ -45,7 +51,6 @@ function angle(a: Point, b: Point) {
     return Math.atan2(dX, dY);
 }
 
-const speedMultiplier = 0.2;
 export function moveMover(mover: Mover, elapsedMs: DOMHighResTimeStamp) {
     if (distance(target(), mover.location) < 20) {
         mover.state = MoverState.GOAL;
@@ -61,7 +66,7 @@ export function moveMover(mover: Mover, elapsedMs: DOMHighResTimeStamp) {
     }
 
     const path = mover.path;
-    let distanceToTravel = mover.speed * speedMultiplier * elapsedMs;
+    let distanceToTravel = mover.speed * elapsedMs;
 
     if (path && path.points.length) {
         // Travel along path.
