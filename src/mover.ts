@@ -8,23 +8,23 @@ export function spawn(): Mover {
         x: isHorizontalSpawn ? (Math.random() * canvas.width) : (isFarSpawn ? canvas.width : 0),
         y: isHorizontalSpawn ? (isFarSpawn ? canvas.height : 0) : (Math.random() * canvas.height),
     };
-    
+
     let startAngle = 0;
     if (isHorizontalSpawn && !isFarSpawn) {
-        // Spawns from top of screen, start angle [0.5PI, 1.5PI].
-        startAngle = (Math.random() * Math.PI) + (0.5 * Math.PI);
-    }
-    if (isHorizontalSpawn && isFarSpawn) {
-        // Spawns from bottom of screen, start angle [1.5PI, 2.5PI].
-        startAngle = (Math.random() * Math.PI) + (1.5 * Math.PI);
-    }
-    if (!isHorizontalSpawn && isFarSpawn) {
-        // Spawns from right of screen, start angle [1.0PI, 2.0PI].
+        // Spawns from top of screen, start angle [1.0PI, 2.0PI].
         startAngle = (Math.random() * Math.PI) + Math.PI;
     }
-    if (!isHorizontalSpawn && !isFarSpawn) {
-        // Spawns from top of left, start angle [0.0PI, 1.0PI].
+    if (isHorizontalSpawn && isFarSpawn) {
+        // Spawns from bottom of screen, start angle [0, 1.0PI].
         startAngle = (Math.random() * Math.PI);
+    }
+    if (!isHorizontalSpawn && isFarSpawn) {
+        // Spawns from right of screen, start angle [0.5PI, 1.5PI].
+        startAngle = (Math.random() * Math.PI) + (0.5 * Math.PI);
+    }
+    if (!isHorizontalSpawn && !isFarSpawn) {
+        // Spawns from top of left, start angle [1.5PI, 2.5PI].
+        startAngle = (Math.random() * Math.PI) + (1.5 * Math.PI);
     }
 
     // Enums are weird, it has both the number to string mapping and the string to
