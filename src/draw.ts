@@ -1,4 +1,5 @@
 import {Path, Point, Mover, MoverState, MoverType} from './types';
+import sharkSrc from './shark.png';
 
 export const canvas = document.querySelector('canvas')!;
 canvas.width = window.innerWidth;
@@ -32,11 +33,22 @@ export function drawMoverFaceAndPath(mover: Mover) {
     context.fillStyle = color;
     context.strokeStyle = color;
 
-    drawFace(mover.location.x, mover.location.y);
+    drawShark(mover);
     if (mover.path) {
         drawPath(mover.path);
     }
 
+}
+
+function drawShark(mover: Mover) {
+    context.save();
+    context.translate(mover.location.x, mover.location.y);
+    context.rotate(-mover.startAngle + Math.PI / 2);
+    context.translate(
+        -sharkImg.width / 2, 
+        -sharkImg.height / 2);
+    context.drawImage(sharkImg, 0, 0);
+    context.restore();
 }
 
 export function drawPath(path: Path) {
@@ -104,3 +116,6 @@ angle: ${mover.angle}`;
         y += 25;
     }
 }
+
+const sharkImg = new Image();
+sharkImg.src = sharkSrc;
