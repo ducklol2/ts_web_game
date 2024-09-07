@@ -1,6 +1,6 @@
-import {canvas, context, drawTarget, drawStats, drawMoverFaceAndPath} from './draw';
-import {Point, Mover, MoverState} from './types';
-import {spawn, moveMover, distance} from './mover';
+import { canvas, context, drawTarget, drawStats, drawMoverFaceAndPath } from './draw';
+import { Point, Mover, MoverState } from './types';
+import { spawn, moveMover, distance } from './mover';
 
 let score = 0;
 
@@ -16,13 +16,12 @@ export function runGame() {
 function loop(timestampMs: DOMHighResTimeStamp) {
     context.clearRect(0, 0, canvas.width, canvas.height);
     move(timestampMs - lastFrameMs);
-    if (handleCollision()) {
-      clearInterval(loopId);
+    if (!handleCollision()) {
+        lastFrameMs = timestampMs;
+        loopId = requestAnimationFrame(loop);
     }
     draw();
 
-    lastFrameMs = timestampMs;
-    loopId = requestAnimationFrame(loop);
 }
 
 
@@ -37,17 +36,17 @@ for (let i = 0; i < 3; i++) {
  */
 function handleCollision(): boolean {
     for (let i = 0; i < movers.length; i++) {
-     for (let j = 1; j < movers.length; j++) {
-         if (i === j) break;
-         if (distance(movers[i].location, movers[j].location) < 10) {
-             movers[i].state = MoverState.COLLIDED;
-             movers[j].state = MoverState.COLLIDED;
-             return true;
-         }
-     }
+        for (let j = 1; j < movers.length; j++) {
+            if (i === j) break;
+            if (distance(movers[i].location, movers[j].location) < 10) {
+                movers[i].state = MoverState.COLLIDED;
+                movers[j].state = MoverState.COLLIDED;
+                return true;
+            }
+        }
     }
     return false;
- }
+}
 function move(elapsedMs: DOMHighResTimeStamp) {
     for (let i = movers.length - 1; i >= 0; i--) {
         moveMover(movers[i], elapsedMs);
