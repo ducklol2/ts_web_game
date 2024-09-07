@@ -9,23 +9,9 @@ export function spawn(): Mover {
         y: isHorizontalSpawn ? (isFarSpawn ? canvas.height : 0) : (Math.random() * canvas.height),
     };
 
-    let angle = 0;
-    if (isHorizontalSpawn && !isFarSpawn) {
-        // Spawns from top of screen, angle [1.0PI, 2.0PI].
-        angle = (Math.random() * Math.PI) + Math.PI;
-    }
-    if (isHorizontalSpawn && isFarSpawn) {
-        // Spawns from bottom of screen, angle [0, 1.0PI].
-        angle = (Math.random() * Math.PI);
-    }
-    if (!isHorizontalSpawn && isFarSpawn) {
-        // Spawns from right of screen, angle [0.5PI, 1.5PI].
-        angle = (Math.random() * Math.PI) + (0.5 * Math.PI);
-    }
-    if (!isHorizontalSpawn && !isFarSpawn) {
-        // Spawns from top of left, angle [1.5PI, 2.5PI].
-        angle = (Math.random() * Math.PI) + (1.5 * Math.PI);
-    }
+    // Allow a possible spread of 0.8 PI, or 144 degrees.
+    const angleJitter = (Math.random() * Math.PI * 0.8) - (Math.PI * 0.4);
+    const startAngle = angle(location, target()) + angleJitter;
 
     // Enums are weird, it has both the number to string mapping and the string to
     // number mapping, so divide the length by two.
@@ -33,7 +19,7 @@ export function spawn(): Mover {
     const type = typeIndex as MoverType;
 
     return {
-        angle,
+        angle: startAngle,
         speed: Math.random(),
         location,
         path: { points: [] },
