@@ -1,5 +1,7 @@
 import { Path, Point, Mover, MoverState, MoverType } from "./types";
 import sharkSrc from "./shark.png";
+import raySrc from "./ray.png";
+import turtleSrc from "./turtle.png";
 
 export const canvas = document.querySelector("canvas")!;
 canvas.width = window.innerWidth;
@@ -19,10 +21,10 @@ export function drawMoverFaceAndPath(mover: Mover) {
     // Color based on type
     switch (mover.type) {
       case MoverType.SLOW:
-        color = "purple";
+        color = "green";
         break;
       case MoverType.MEDIUM:
-        color = "yellow";
+        color = "maroon";
         break;
       case MoverType.FAST:
         color = "grey";
@@ -32,18 +34,32 @@ export function drawMoverFaceAndPath(mover: Mover) {
   context.fillStyle = color;
   context.strokeStyle = color;
 
-  drawShark(mover);
+  drawImage(mover);
   if (mover.path) {
     drawPath(mover.path);
   }
 }
 
-function drawShark(mover: Mover) {
+function getImage(type: MoverType) {
+  switch (type) {
+    case MoverType.SLOW:
+      return turtleImg;
+    case MoverType.MEDIUM:
+      return rayImg;
+    case MoverType.FAST:
+      return sharkImg;
+    default:
+      return sharkImg;
+  }
+}
+
+function drawImage(mover: Mover) {
   context.save();
   context.translate(mover.location.x, mover.location.y);
   context.rotate(-mover.angle + Math.PI / 2);
-  context.translate(-sharkImg.width / 2, -sharkImg.height / 2);
-  context.drawImage(sharkImg, 0, 0);
+  const image = getImage(mover.type);
+  context.translate(-image.width / 2, -image.height / 2);
+  context.drawImage(image, 0, 0);
   context.restore();
 }
 
@@ -117,3 +133,9 @@ angle: ${mover.angle}`;
 
 const sharkImg = new Image();
 sharkImg.src = sharkSrc;
+
+const rayImg = new Image();
+rayImg.src = raySrc;
+
+const turtleImg = new Image();
+turtleImg.src = turtleSrc;
