@@ -38,7 +38,7 @@ function handleCollision(): boolean {
     for (let i = 0; i < movers.length; i++) {
         for (let j = 1; j < movers.length; j++) {
             if (i === j) break;
-            if (distance(movers[i].location, movers[j].location) < 10) {
+            if (distance(movers[i].location, movers[j].location) < 30) {
                 movers[i].state = MoverState.COLLIDED;
                 movers[j].state = MoverState.COLLIDED;
                 return true;

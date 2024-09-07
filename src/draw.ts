@@ -11,11 +11,13 @@ export function target(): Point {
 }
 
 export function drawMoverFaceAndPath(mover: Mover) {
+    let color = 'black';
     if (mover.state === MoverState.COLLIDED) {
-        context.fillStyle = 'red';
-    } else {
-        context.fillStyle = 'black';
+        color = 'red';
     }
+    context.fillStyle = color;
+    context.strokeStyle = color;
+    
     drawFace(mover.location.x, mover.location.y);
     if (mover.path) {
         drawPath(mover.path);
