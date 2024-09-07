@@ -41,7 +41,7 @@ function loop(timestampMs: DOMHighResTimeStamp) {
 function handleCollision(): boolean {
     for (let i = 0; i < movers.length; i++) {
         for (let j = 1; j < movers.length; j++) {
-            if (i === j) break;
+            if (i === j || movers[i].state !== MoverState.MOVING || movers[j].state !== MoverState.MOVING) break;
             if (distance(movers[i].location, movers[j].location) < COLLISION_DISTANCE) {
                 movers[i].state = MoverState.COLLIDED;
                 movers[j].state = MoverState.COLLIDED;
