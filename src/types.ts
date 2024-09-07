@@ -22,7 +22,7 @@ export enum MoverState {
 
 
 export type Mover = {
-    startAngle: number;
+    angle: number;
     path: Path;
     speed: number;
     location: Point;

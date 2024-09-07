@@ -96,7 +96,7 @@ export function drawDebug(movers: Mover[]) {
 `x: ${mover.location.x.toFixed()}
 y: ${mover.location.y.toFixed()}
 speed: ${mover.speed}
-angle: ${mover.startAngle}`;
+angle: ${mover.angle}`;
         for (const line of text.split('\n')) {
             context.fillText(line, 50, y);
             y += 25;

@@ -9,22 +9,22 @@ export function spawn(): Mover {
         y: isHorizontalSpawn ? (isFarSpawn ? canvas.height : 0) : (Math.random() * canvas.height),
     };
 
-    let startAngle = 0;
+    let angle = 0;
     if (isHorizontalSpawn && !isFarSpawn) {
-        // Spawns from top of screen, start angle [1.0PI, 2.0PI].
-        startAngle = (Math.random() * Math.PI) + Math.PI;
+        // Spawns from top of screen, angle [1.0PI, 2.0PI].
+        angle = (Math.random() * Math.PI) + Math.PI;
     }
     if (isHorizontalSpawn && isFarSpawn) {
-        // Spawns from bottom of screen, start angle [0, 1.0PI].
-        startAngle = (Math.random() * Math.PI);
+        // Spawns from bottom of screen, angle [0, 1.0PI].
+        angle = (Math.random() * Math.PI);
     }
     if (!isHorizontalSpawn && isFarSpawn) {
-        // Spawns from right of screen, start angle [0.5PI, 1.5PI].
-        startAngle = (Math.random() * Math.PI) + (0.5 * Math.PI);
+        // Spawns from right of screen, angle [0.5PI, 1.5PI].
+        angle = (Math.random() * Math.PI) + (0.5 * Math.PI);
     }
     if (!isHorizontalSpawn && !isFarSpawn) {
-        // Spawns from top of left, start angle [1.5PI, 2.5PI].
-        startAngle = (Math.random() * Math.PI) + (1.5 * Math.PI);
+        // Spawns from top of left, angle [1.5PI, 2.5PI].
+        angle = (Math.random() * Math.PI) + (1.5 * Math.PI);
     }
 
     // Enums are weird, it has both the number to string mapping and the string to
@@ -33,7 +33,7 @@ export function spawn(): Mover {
     const type = typeIndex as MoverType;
 
     return {
-        startAngle,
+        angle,
         speed: Math.random(),
         location,
         path: { points: [] },
@@ -78,27 +78,27 @@ export function moveMover(mover: Mover, elapsedMs: DOMHighResTimeStamp) {
     // Travel along path.
     while (path.points.length) {
       const distanceToNextPoint = distance(mover.location, path.points[0]);
-      mover.startAngle = angle(mover.location, path.points[0]);
+      mover.angle = angle(mover.location, path.points[0]);
 
       if (
         isNaN(mover.location.x) ||
         isNaN(mover.location.y) ||
-        isNaN(mover.startAngle)
+        isNaN(mover.angle)
       ) {
         debugger;
       }
 
       // If next point is far away, travel part way to it.
       if (distanceToNextPoint > distanceToTravel) {
-        const dX = Math.sin(mover.startAngle) * distanceToTravel;
-        const dY = Math.cos(mover.startAngle) * distanceToTravel;
+        const dX = Math.sin(mover.angle) * distanceToTravel;
+        const dY = Math.cos(mover.angle) * distanceToTravel;
         mover.location.x += dX;
         mover.location.y += dY;
 
         if (
           isNaN(mover.location.x) ||
           isNaN(mover.location.y) ||
-          isNaN(mover.startAngle)
+          isNaN(mover.angle)
         ) {
           debugger;
         }
@@ -113,7 +113,7 @@ export function moveMover(mover: Mover, elapsedMs: DOMHighResTimeStamp) {
       if (
         isNaN(mover.location.x) ||
         isNaN(mover.location.y) ||
-        isNaN(mover.startAngle)
+        isNaN(mover.angle)
       ) {
         debugger;
       }
@@ -121,15 +121,15 @@ export function moveMover(mover: Mover, elapsedMs: DOMHighResTimeStamp) {
   }
 
   // No path; keep moving in current direction.
-  const dX = Math.sin(mover.startAngle) * distanceToTravel;
-  const dY = Math.cos(mover.startAngle) * distanceToTravel;
+  const dX = Math.sin(mover.angle) * distanceToTravel;
+  const dY = Math.cos(mover.angle) * distanceToTravel;
   mover.location.x += dX;
   mover.location.y += dY;
 
   if (
     isNaN(mover.location.x) ||
     isNaN(mover.location.y) ||
-    isNaN(mover.startAngle)
+    isNaN(mover.angle)
   ) {
     debugger;
   }
