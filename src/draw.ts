@@ -1,4 +1,4 @@
-import {Path, Point, Mover} from './types';
+import {Path, Point, Mover, MoverState} from './types';
 
 export const canvas = document.querySelector('canvas')!;
 canvas.width = window.innerWidth;
@@ -11,6 +11,11 @@ export function target(): Point {
 }
 
 export function drawMoverFaceAndPath(mover: Mover) {
+    if (mover.state === MoverState.COLLIDED) {
+        context.fillStyle = 'red';
+    } else {
+        context.fillStyle = 'black';
+    }
     drawFace(mover.location.x, mover.location.y);
     if (mover.path) {
         drawPath(mover.path);
@@ -31,7 +36,6 @@ export function drawPath(path: Path) {
 }
 
 export function drawFace(x: number, y: number, r: number = 50) {
-    context.fillStyle = 'black';
     context.beginPath();
     // outside circle head
     context.arc(x, y, r, 0.0, Math.PI * 2);
@@ -62,6 +66,7 @@ export function drawTarget() {
 }
 
 export function drawStats(startTime: Date, score: number) {
+    context.fillStyle = 'blue';
     context.font = 'bold 48px serif';
     context.fillText(`Time: ${Math.floor((Date.now() - startTime.getTime()) / 1000)}`, canvas.width - 400, 100);
     context.fillText(`Score: ${score}`, canvas.width - 400, 150);

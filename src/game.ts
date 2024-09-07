@@ -6,25 +6,48 @@ let score = 0;
 
 const startTime = new Date();
 
+let loopId = 0;
+
+let lastFrameMs: DOMHighResTimeStamp = 0;
+export function runGame() {
+    loopId = requestAnimationFrame(loop);
+}
+
+function loop(timestampMs: DOMHighResTimeStamp) {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    move(timestampMs - lastFrameMs);
+    if (handleCollision()) {
+      clearInterval(loopId);
+    }
+    draw();
+
+    lastFrameMs = timestampMs;
+    loopId = requestAnimationFrame(loop);
+}
+
+
 const movers: Mover[] = [];
 for (let i = 0; i < 3; i++) {
     movers.push(spawn());
 }
 
-let lastFrameMs: DOMHighResTimeStamp = 0;
-export function runGame() {
-    requestAnimationFrame(loop);
-}
-
-function loop(timestampMs: DOMHighResTimeStamp) {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    draw();
-    move(timestampMs - lastFrameMs);
-
-    lastFrameMs = timestampMs;
-    requestAnimationFrame(loop);
-}
-
+/**
+ * Modifies the first pair of colliding movers to reflect a collision.
+ * @returns true if there is a collision
+ */
+function handleCollision(): boolean {
+    for (let i = 0; i < movers.length; i++) {
+     for (let j = 1; j < movers.length; j++) {
+         if (i === j) break;
+         if (distance(movers[i].location, movers[j].location) < 10) {
+             movers[i].state = MoverState.COLLIDED;
+             movers[j].state = MoverState.COLLIDED;
+             return true;
+         }
+     }
+    }
+    return false;
+ }
 function move(elapsedMs: DOMHighResTimeStamp) {
     for (let i = movers.length - 1; i >= 0; i--) {
         moveMover(movers[i], elapsedMs);
@@ -102,6 +125,4 @@ function handleInteraction(point: Point) {
         }
         return closestTouchedMover;
     }
-
-    // path.points.push({ x: ev.clientX, y: ev.clientY });
 }

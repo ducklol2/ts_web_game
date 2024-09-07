@@ -11,6 +11,7 @@ export enum MoverState {
     MOVING,
     GOAL,
     OUT_OF_BOUNDS,
+    COLLIDED,
 }
 
 
