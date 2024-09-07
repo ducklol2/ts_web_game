@@ -1,33 +1,11 @@
-import './style.css'
+import './style.css';
+import {Point, Path, MoverState, Mover} from './types';
 
 const canvas = document.querySelector('canvas')!;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const context = canvas.getContext('2d')!;
-
-type Point = {
-    x: number;
-    y: number;
-}
-
-type Path = {
-    points: Point[];
-}
-
-enum MoverState {
-    MOVING,
-    GOAL,
-    OUT_OF_BOUNDS,
-}
-
-type Mover = {
-    startAngle: number;
-    path: Path;
-    speed: number;
-    location: Point;
-    state: MoverState;
-}
 
 const movers: Mover[] = [];
 for (let i = 0; i < 3; i++) {
