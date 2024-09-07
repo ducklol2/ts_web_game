@@ -16,6 +16,7 @@ export enum MoverType {
 export enum MoverState {
   MOVING,
   GOAL,
+  GOAL_ANIMATION_FINISHED,
   OUT_OF_BOUNDS,
   COLLIDED,
 }
@@ -27,4 +28,5 @@ export type Mover = {
   location: Point;
   state: MoverState;
   type: MoverType;
+  size: number;
 };

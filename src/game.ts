@@ -84,7 +84,7 @@ function move(elapsedMs: DOMHighResTimeStamp) {
     moveMover(movers[i], elapsedMs);
 
     switch (movers[i].state) {
-      case MoverState.GOAL:
+      case MoverState.GOAL_ANIMATION_FINISHED:
         movers.splice(i, 1);
         movers.push(cleanSpawn());
         score++;

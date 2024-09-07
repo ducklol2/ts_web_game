@@ -59,8 +59,10 @@ function drawImage(mover: Mover) {
   context.translate(mover.location.x, mover.location.y);
   context.rotate(-mover.angle + Math.PI / 2);
   const image = getImage(mover.type);
-  context.translate(-image.width / 2, -image.height / 2);
-  context.drawImage(image, 0, 0);
+  const xSize = mover.size * image.width;
+  const ySize = mover.size * image.height;
+  context.translate(-xSize / 2, -ySize / 2);
+  context.drawImage(image, 0, 0, xSize, ySize);
   context.restore();
 }
 

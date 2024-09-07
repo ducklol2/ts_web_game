@@ -42,6 +42,7 @@ export function spawn(): Mover {
     path: { points: [] },
     state: MoverState.MOVING,
     type,
+    size: 1,
   };
 }
 
@@ -65,6 +66,15 @@ function angle(a: Point, b: Point) {
 export function moveMover(mover: Mover, elapsedMs: DOMHighResTimeStamp) {
   if (distance(target(), mover.location) < TARGET_RADIUS) {
     mover.state = MoverState.GOAL;
+  }
+
+  if (mover.state == MoverState.GOAL) {
+    if (mover.size > 0.1) {
+      mover.size -= 0.005;
+      mover.angle += 0.05;
+    } else {
+      mover.state = MoverState.GOAL_ANIMATION_FINISHED;
+    }
     return;
   }
 
