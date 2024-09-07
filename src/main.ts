@@ -1,5 +1,5 @@
-import './style.css';
+import "./style.css";
 
-import {runGame} from './game';
+import { runGame } from "./game";
 
 runGame();
