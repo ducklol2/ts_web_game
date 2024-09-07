@@ -43,7 +43,7 @@ export function drawMoverFaceAndPath(mover: Mover) {
 function drawShark(mover: Mover) {
     context.save();
     context.translate(mover.location.x, mover.location.y);
-    context.rotate(-mover.startAngle + Math.PI / 2);
+    context.rotate(-mover.angle + Math.PI / 2);
     context.translate(
         -sharkImg.width / 2, 
         -sharkImg.height / 2);
