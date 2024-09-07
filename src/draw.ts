@@ -1,4 +1,4 @@
-import {Path, Point, Mover, MoverState} from './types';
+import {Path, Point, Mover, MoverState, MoverType} from './types';
 
 export const canvas = document.querySelector('canvas')!;
 canvas.width = window.innerWidth;
@@ -11,13 +11,27 @@ export function target(): Point {
 }
 
 export function drawMoverFaceAndPath(mover: Mover) {
-    let color = 'black';
+    let color = 'green';
     if (mover.state === MoverState.COLLIDED) {
         color = 'red';
+    } else {
+      // Color based on type
+      switch (mover.type) {
+        case MoverType.SLOW:
+            color = 'purple';
+            break;
+        case MoverType.MEDIUM:
+            color = 'yellow';
+            break;
+        case MoverType.FAST:
+            color = 'grey';
+            break;
+      }
+
     }
     context.fillStyle = color;
     context.strokeStyle = color;
-    
+
     drawFace(mover.location.x, mover.location.y);
     if (mover.path) {
         drawPath(mover.path);

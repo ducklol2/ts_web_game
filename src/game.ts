@@ -3,14 +3,16 @@ import { Point, Mover, MoverState } from './types';
 import { spawn, moveMover, distance } from './mover';
 
 let score = 0;
-
 const startTime = new Date();
-
-let loopId = 0;
-
 let lastFrameMs: DOMHighResTimeStamp = 0;
+const movers: Mover[] = [];
+
 export function runGame() {
-    loopId = requestAnimationFrame(loop);
+    for (let i = 0; i < 3; i++) {
+        movers.push(spawn());
+    }
+
+    requestAnimationFrame(loop);
 }
 
 function loop(timestampMs: DOMHighResTimeStamp) {
@@ -18,16 +20,10 @@ function loop(timestampMs: DOMHighResTimeStamp) {
     move(timestampMs - lastFrameMs);
     if (!handleCollision()) {
         lastFrameMs = timestampMs;
-        loopId = requestAnimationFrame(loop);
+        requestAnimationFrame(loop);
     }
     draw();
 
-}
-
-
-const movers: Mover[] = [];
-for (let i = 0; i < 3; i++) {
-    movers.push(spawn());
 }
 
 /**
