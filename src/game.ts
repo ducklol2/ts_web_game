@@ -11,19 +11,23 @@ for (let i = 0; i < 3; i++) {
     movers.push(spawn());
 }
 
+let lastFrameMs: DOMHighResTimeStamp = 0;
 export function runGame() {
-    setInterval(loop, 50);
+    requestAnimationFrame(loop);
 }
 
-function loop() {
-    move();
+function loop(timestampMs: DOMHighResTimeStamp) {
     context.clearRect(0, 0, canvas.width, canvas.height);
     draw();
+    move(timestampMs - lastFrameMs);
+
+    lastFrameMs = timestampMs;
+    requestAnimationFrame(loop);
 }
 
-function move() {
+function move(elapsedMs: DOMHighResTimeStamp) {
     for (let i = movers.length - 1; i >= 0; i--) {
-        moveMover(movers[i]);
+        moveMover(movers[i], elapsedMs);
 
         switch (movers[i].state) {
             case MoverState.GOAL:
