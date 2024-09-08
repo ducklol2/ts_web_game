@@ -7,7 +7,14 @@ import {
   drawMoverFaceAndPath,
   drawButtons,
 } from './draw';
-import { Point, Mover, MoverState, Button, InputType } from './types';
+import {
+  Point,
+  Mover,
+  MoverState,
+  Button,
+  InputType,
+  GameState,
+} from './types';
 import { spawn, moveMover, distance } from './mover';
 import { inputs } from './input';
 
@@ -26,12 +33,14 @@ let startTime = new Date();
 let lastFrameMs: DOMHighResTimeStamp = 0;
 let movers: Mover[] = [];
 let requestAnimationFrameId = 0;
+let gameState = GameState.RUNNING;
 
 export function runGame() {
   score = 0;
   startTime = new Date();
   lastFrameMs = 0;
   movers = [];
+  gameState = GameState.RUNNING;
 
   for (let i = 0; i < 3; i++) {
     movers.push(cleanSpawn());
@@ -47,13 +56,16 @@ function resetGame() {
 
 function loop(timestampMs: DOMHighResTimeStamp) {
   handleInputs();
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  move(timestampMs - lastFrameMs);
-  if (!handleCollision()) {
-    lastFrameMs = timestampMs;
-    requestAnimationFrameId = requestAnimationFrame(loop);
+  if (gameState === GameState.RUNNING) {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    move(timestampMs - lastFrameMs);
+    if (handleCollision()) {
+      gameState = GameState.GAME_OVER;
+    }
+    draw();
   }
-  draw();
+  lastFrameMs = timestampMs;
+  requestAnimationFrameId = requestAnimationFrame(loop);
 }
 
 /**
