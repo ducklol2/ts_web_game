@@ -35,6 +35,10 @@ let movers: Mover[] = [];
 let requestAnimationFrameId = 0;
 let gameState = GameState.RUNNING;
 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const DEBUG_MODE = urlParams.has('debug');
+
 export function runGame() {
   score = 0;
   startTime = new Date();
@@ -138,6 +142,9 @@ function draw() {
   movers.map(drawMoverFaceAndPath);
   drawStats(startTime, score);
   drawButtons(buttons);
+  if (DEBUG_MODE) {
+    drawDebug(movers);
+  }
 }
 
 let currentlySelectedMover: Mover | null = null;
