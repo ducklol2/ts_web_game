@@ -51,6 +51,9 @@ export function runGame() {
 }
 
 function resetGame() {
+  if (DEBUG_MODE) {
+    window.console.log('Resetting...');
+  }
   cancelAnimationFrame(requestAnimationFrameId);
   runGame();
 }

@@ -24,8 +24,8 @@ export function spawn(): Mover {
       : Math.random() * canvas.height,
   };
 
-  // Allow a possible spread of 0.7 PI.
-  const angleJitter = Math.random() * Math.PI * 0.7 - Math.PI * 0.35;
+  // Allow a possible spread of 0.5 PI.
+  const angleJitter = Math.random() * Math.PI * 0.5 - Math.PI * 0.25;
   const startAngle = angle(location, target()) + angleJitter;
 
   // Enums are weird, it has both the number to string mapping and the string to
@@ -36,6 +36,12 @@ export function spawn(): Mover {
   const type = typeIndex as MoverType;
 
   if (DEBUG_MODE) {
+    window.console.log(
+      `0.5PI: ${0.5 * Math.PI}, angleToTarget: ${angle(
+        location,
+        target()
+      )}, angleJitter: ${angleJitter}, startAngle ${startAngle}`
+    );
     window.console.log(
       `mover spawn x: ${location.x}, y: ${location.y}, startAngle(rad): ${startAngle}`
     );
