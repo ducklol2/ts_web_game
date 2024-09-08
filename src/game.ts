@@ -46,7 +46,7 @@ function resetGame() {
 }
 
 function loop(timestampMs: DOMHighResTimeStamp) {
-  handleInputs();
+  handleGameInputs();
   context.clearRect(0, 0, canvas.width, canvas.height);
   move(timestampMs - lastFrameMs);
   if (!handleCollision()) {
