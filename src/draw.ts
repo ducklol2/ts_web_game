@@ -1,4 +1,12 @@
-import { Path, Point, Mover, MoverState, MoverType, Button } from './types';
+import {
+  Path,
+  Point,
+  Mover,
+  MoverState,
+  MoverType,
+  Button,
+  DEBUG_MODE,
+} from './types';
 import sharkSrc from './shark.png';
 import raySrc from './ray.png';
 import turtleSrc from './turtle.png';
@@ -7,6 +15,10 @@ import { TARGET_RADIUS } from './target';
 export const canvas = document.querySelector('canvas')!;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+
+if (DEBUG_MODE) {
+  window.console.log(`canvas width: ${canvas.width}, height: ${canvas.height}`);
+}
 
 export const context = canvas.getContext('2d')!;
 
@@ -147,16 +159,16 @@ export function drawButtons(buttons: Button[]) {
   for (const button of buttons) {
     context.fillStyle = 'lightred';
     context.fillRect(
-      button.location.x - button.size[0]/2,
-      button.location.y - button.size[1]/2,
+      button.location.x - button.size[0] / 2,
+      button.location.y - button.size[1] / 2,
       button.size[0],
-      button.size[1],
-    )
-    
+      button.size[1]
+    );
+
     context.fillStyle = 'white';
     context.font = 'bold 32px serif';
     context.textAlign = 'center';
-    context.textBaseline = 'middle'
+    context.textBaseline = 'middle';
     context.fillText(button.text, button.location.x, button.location.y);
   }
 }

@@ -53,3 +53,7 @@ export enum GameState {
   RUNNING,
   GAME_OVER,
 }
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+export const DEBUG_MODE = urlParams.has('debug');

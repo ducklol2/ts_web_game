@@ -1,6 +1,6 @@
-import { MoverState, Mover, Point, MoverType } from "./types";
-import { canvas, target } from "./draw";
-import { TARGET_RADIUS } from "./target";
+import { MoverState, Mover, Point, MoverType, DEBUG_MODE } from './types';
+import { canvas, target } from './draw';
+import { TARGET_RADIUS } from './target';
 
 const MOVER_TYPE_TO_SPEED = new Map<MoverType, number>([
   [MoverType.SLOW, 0.06],
@@ -34,6 +34,12 @@ export function spawn(): Mover {
     Math.random() * (Object.keys(MoverType).length / 2)
   );
   const type = typeIndex as MoverType;
+
+  if (DEBUG_MODE) {
+    window.console.log(
+      `mover spawn x: ${location.x}, y: ${location.y}, startAngle(rad): ${startAngle}`
+    );
+  }
 
   return {
     angle: startAngle,

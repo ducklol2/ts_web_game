@@ -14,6 +14,7 @@ import {
   Button,
   InputType,
   GameState,
+  DEBUG_MODE,
 } from './types';
 import { spawn, moveMover, distance } from './mover';
 import { inputs } from './input';
@@ -34,10 +35,6 @@ let lastFrameMs: DOMHighResTimeStamp = 0;
 let movers: Mover[] = [];
 let requestAnimationFrameId = 0;
 let gameState = GameState.RUNNING;
-
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const DEBUG_MODE = urlParams.has('debug');
 
 export function runGame() {
   score = 0;
