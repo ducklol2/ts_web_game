@@ -37,3 +37,19 @@ export type Button = {
   size: [number, number],
   handler: () => void
 }
+
+export enum InputType {
+  // Includes clicks.
+  Drag,
+  DragStop,
+}
+
+export type Input = {
+  type: InputType;
+  location?: Point;
+};
+
+export enum GameState {
+  RUNNING,
+  GAME_OVER,
+}

@@ -7,18 +7,18 @@ import {
   drawMoverFaceAndPath,
   drawButtons,
 } from './draw';
-import { Point, Mover, MoverState, Button } from './types';
+import { Point, Mover, MoverState, Button, InputType } from './types';
 import { spawn, moveMover, distance } from './mover';
-import { inputs, InputType } from './input';
+import { inputs } from './input';
 
 const COLLISION_DISTANCE = 30;
 const buttons: Button[] = [
   {
-    location: {x: 100, y: 100},
+    location: { x: 100, y: 100 },
     size: [150, 75],
-    text: "Reset",
-    handler: () => resetGame()
-  }
+    text: 'Reset',
+    handler: () => resetGame(),
+  },
 ];
 
 let score = 0;
@@ -46,7 +46,7 @@ function resetGame() {
 }
 
 function loop(timestampMs: DOMHighResTimeStamp) {
-  handleGameInputs();
+  handleInputs();
   context.clearRect(0, 0, canvas.width, canvas.height);
   move(timestampMs - lastFrameMs);
   if (!handleCollision()) {
@@ -146,14 +146,11 @@ function handleInputs() {
       case InputType.DragStop:
         currentlySelectedMover = null;
         break;
-      case InputType.Reset:
-        resetGame();
-        break;
     }
   }
 }
 
-function getButtonForPoint(point: Point): Button|null {
+function getButtonForPoint(point: Point): Button | null {
   for (const button of buttons) {
     if (
       point.x >= button.location.x - button.size[0] / 2 &&
@@ -185,7 +182,8 @@ function handleInteraction(point: Point) {
       distance(
         point,
         currentlySelectedMover.path.points[
-        currentlySelectedMover.path.points.length - 1]
+          currentlySelectedMover.path.points.length - 1
+        ]
       ) > 20
     ) {
       currentlySelectedMover.path.points.push(point);

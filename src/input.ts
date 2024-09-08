@@ -1,14 +1,6 @@
-import { Point } from './types';
+import { Point, Input, InputType } from './types';
 
-export enum InputType {
-  Drag,
-  DragStop,
-}
 
-export type Input = {
-  type: InputType;
-  location?: Point;
-};
 
 export const inputs: Input[] = [];
 
